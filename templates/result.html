@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}
+FitBuddy | Your Plan
+{% endblock %}
+
+
+{% block content %}
+
+<section class="result-header">
+
+    <div>
+
+        <p class="eyebrow">
+            YOUR FITBUDDY PLAN
+        </p>
+
+        <h1>
+            Hi {{ user.name }} 👋
+        </h1>
+
+        <p>
+
+            Here is your AI-generated plan for
+
+            <strong>
+                {{ user.goal }}
+            </strong>
+
+            at
+
+            <strong>
+                {{ user.intensity }}
+            </strong>
+
+            intensity.
+
+        </p>
+
+    </div>
+
+
+    <a
+        class="secondary"
+        href="/"
+    >
+        Create another
+    </a>
+
+</section>
+
+
+{% if message %}
+
+<div class="alert success">
+
+    {{ message }}
+
+</div>
+
+{% endif %}
+
+
+<section class="profile-grid">
+
+    <div class="stat">
+
+        <small>
+            User ID
+        </small>
+
+        <strong>
+            {{ user.user_id }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <small>
+            Age
+        </small>
+
+        <strong>
+            {{ user.age }}
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <small>
+            Weight
+        </small>
+
+        <strong>
+            {{ user.weight }} kg
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <small>
+            Intensity
+        </small>
+
+        <strong>
+            {{ user.intensity|title }}
+        </strong>
+
+    </div>
+
+</section>
+
+
+<section class="card plan-card">
+
+    <div class="section-heading">
+
+        <div>
+
+            <p class="eyebrow">
+                WORKOUT PLAN
+            </p>
+
+            <h2>
+
+                {% if plan.updated_plan %}
+
+                    Updated 7-day plan
+
+                {% else %}
+
+                    Original 7-day plan
+
+                {% endif %}
+
+            </h2>
+
+        </div>
+
+
+        <span class="badge">
+
+            Plan #{{ plan.id }}
+
+        </span>
+
+    </div>
+
+
+    <pre class="plan-text">{{ display_plan }}</pre>
+
+</section>
+
+
+<section class="card tip-card">
+
+    <p class="eyebrow">
+        NUTRITION / RECOVERY TIP
+    </p>
+
+    <p class="tip">
+
+        {{ plan.nutrition_tip }}
+
+    </p>
+
+</section>
+
+
+<section class="card feedback-card">
+
+    <p class="eyebrow">
+        REFINE YOUR PLAN
+    </p>
+
+    <h2>
+        What would you like to change?
+    </h2>
+
+    <p>
+
+        Examples:
+
+        “more cardio”,
+        “add a rest day”,
+        or
+        “make the workouts shorter”.
+
+    </p>
+
+
+    <form
+        action="/submit-feedback"
+        method="post"
+    >
+
+        <input
+            type="hidden"
+            name="user_id"
+            value="{{ user.user_id }}"
+        >
+
+
+        <textarea
+            name="feedback"
+            maxlength="1000"
+            minlength="3"
+            placeholder="Tell FitBuddy what you want to change..."
+            required
+        ></textarea>
+
+
+        <button
+            class="primary"
+            type="submit"
+        >
+            Update Plan with AI →
+        </button>
+
+    </form>
+
+</section>
+
+
+{% if plan.feedback %}
+
+<section class="card history-card">
+
+    <p class="eyebrow">
+        LATEST FEEDBACK
+    </p>
+
+    <p>
+        “{{ plan.feedback }}”
+    </p>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}
+FitBuddy | Admin
+{% endblock %}
+
+
+{% block content %}
+
+<section class="result-header">
+
+    <div>
+
+        <p class="eyebrow">
+            ADMIN DASHBOARD
+        </p>
+
+        <h1>
+            All users & plans
+        </h1>
+
+        <p>
+            Review stored user profiles and
+            original/updated AI plans.
+        </p>
+
+    </div>
+
+</section>
+
+
+{% if not users %}
+
+<div class="card empty">
+
+    <h2>
+        No users yet
+    </h2>
+
+    <p>
+        Create a plan from the home page
+        to see it here.
+    </p>
+
+</div>
+
+{% endif %}
+
+
+{% for user in users %}
+
+<section class="card admin-user">
+
+    <div class="user-top">
+
+        <div>
+
+            <h2>
+                {{ user.name }}
+            </h2>
+
+            <p class="muted">
+
+                {{ user.user_id }}
+                ·
+                {{ user.age }} years
+                ·
+                {{ user.weight }} kg
+                ·
+                {{ user.goal|title }}
+                ·
+                {{ user.intensity|title }}
+
+            </p>
+
+        </div>
+
+
+        <form
+            action="/delete-user/{{ user.user_id }}"
+            method="post"
+            onsubmit="return confirm('Delete this user and all stored plans?');"
+        >
+
+            <input
+                type="hidden"
+                name="admin_key"
+                value="{{ admin_key }}"
+            >
+
+            <button
+                class="danger"
+                type="submit"
+            >
+                Delete
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% for plan in user.plans %}
+
+    <details
+        class="plan-details"
+        {% if loop.last %}
+        open
+        {% endif %}
+    >
+
+        <summary>
+
+            Plan #{{ plan.id }}
+
+            ·
+
+            {{
+                plan.created_at.strftime(
+                    '%Y-%m-%d %H:%M'
+                )
+                if plan.created_at
+                else ''
+            }}
+
+        </summary>
+
+
+        <h3>
+            Original plan
+        </h3>
+
+        <pre class="plan-text compact">{{ plan.original_plan }}</pre>
+
+
+        {% if plan.updated_plan %}
+
+        <h3>
+            Updated plan
+        </h3>
+
+        <pre class="plan-text compact">{{ plan.updated_plan }}</pre>
+
+        {% endif %}
+
+
+        {% if plan.feedback %}
+
+        <h3>
+            Feedback
+        </h3>
+
+        <p>
+            {{ plan.feedback }}
+        </p>
+
+        {% endif %}
+
+    </details>
+
+    {% endfor %}
+
+</section>
+
+{% endfor %}
+
+{% endblock %}

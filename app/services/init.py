@@ -1,0 +1,1 @@
+# FitBuddy AI service package.
